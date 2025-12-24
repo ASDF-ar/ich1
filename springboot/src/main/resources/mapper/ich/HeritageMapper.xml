@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fast.ich.mapper.HeritageMapper">
+
+    <resultMap type="Heritage" id="HeritageResult">
+        <result property="heritageId"    column="heritage_id"    />
+        <result property="title"    column="title"    />
+        <result property="description"    column="description"    />
+        <result property="detailDescription"    column="detail_description"    />
+        <result property="image"    column="image"    />
+        <result property="location"    column="location"    />
+        <result property="category"    column="category"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <select id="selectHeritageList" parameterType="Heritage" resultMap="HeritageResult">
+        select heritage_id, title, description, detail_description, image, location, category, status, create_time from heritage
+        <where>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="category != null  and category != ''"> and category like concat('%', #{category}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectHeritageByHeritageId" parameterType="String" resultMap="HeritageResult">
+select heritage_id, title, description, detail_description, image, location, category, status, create_time from heritage
+        where heritage_id = #{heritageId}
+    </select>
+
+    <insert id="insertHeritage" parameterType="Heritage">
+        insert into heritage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="heritageId != null">heritage_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="description != null and description != ''">description,</if>
+            <if test="detailDescription != null and detailDescription != ''">detail_description,</if>
+            <if test="image != null and image != ''">image,</if>
+            <if test="location != null and location != ''">location,</if>
+            <if test="category != null and category != ''">category,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="heritageId != null">#{heritageId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="description != null and description != ''">#{description},</if>
+            <if test="detailDescription != null and detailDescription != ''">#{detailDescription},</if>
+            <if test="image != null and image != ''">#{image},</if>
+            <if test="location != null and location != ''">#{location},</if>
+            <if test="category != null and category != ''">#{category},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHeritage" parameterType="Heritage">
+        update heritage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="detailDescription != null and detailDescription != ''">detail_description = #{detailDescription},</if>
+            <if test="image != null and image != ''">image = #{image},</if>
+            <if test="location != null and location != ''">location = #{location},</if>
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where heritage_id = #{heritageId}
+    </update>
+
+    <delete id="deleteHeritageByHeritageId" parameterType="String">
+        delete from heritage where heritage_id = #{heritageId}
+    </delete>
+
+    <delete id="deleteHeritageByHeritageIds" parameterType="String">
+        delete from heritage where heritage_id in
+        <foreach item="heritageId" collection="array" open="(" separator="," close=")">
+            #{heritageId}
+        </foreach>
+    </delete>
+</mapper>
