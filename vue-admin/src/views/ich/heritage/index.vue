@@ -4,20 +4,32 @@
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="项目名称" prop="title">
         <el-input
-          v-model="queryParams.title"
-          placeholder="请输入项目名称"
-          clearable
-          @keyup.enter="handleQuery"
+            v-model="queryParams.title"
+            placeholder="请输入项目名称"
+            clearable
+            @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="类别" prop="category">
         <el-input
-          v-model="queryParams.category"
-          placeholder="请输入类别"
-          clearable
-          @keyup.enter="handleQuery"
+            v-model="queryParams.category"
+            placeholder="请输入类别"
+            clearable
+            @keyup.enter="handleQuery"
         />
       </el-form-item>
+
+      <el-form-item label="传承状态" prop="status">
+         <el-select style="width: 200px" v-model="queryParams.status" placeholder="请选择传承状态">
+          <el-option
+            v-for="item in statuOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            />
+        </el-select>
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -28,37 +40,41 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          plain
-          icon="Plus"
-          @click="handleAdd"
-        >新增</el-button>
+            type="primary"
+            plain
+            icon="Plus"
+            @click="handleAdd"
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
-          plain
-          icon="Edit"
-          :disabled="single"
-          @click="handleUpdate"
-        >修改</el-button>
+            type="success"
+            plain
+            icon="Edit"
+            :disabled="single"
+            @click="handleUpdate"
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
-          plain
-          icon="Delete"
-          :disabled="multiple"
-          @click="handleDelete"
-        >删除</el-button>
+            type="danger"
+            plain
+            icon="Delete"
+            :disabled="multiple"
+            @click="handleDelete"
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="warning"
-          plain
-          icon="Download"
-          @click="handleExport"
-        >导出</el-button>
+            type="warning"
+            plain
+            icon="Download"
+            @click="handleExport"
+        >导出
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -66,7 +82,8 @@
             icon="Upload"
             size="mini"
             @click="handleImport"
-        >导入</el-button>
+        >导入
+        </el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -74,20 +91,30 @@
     <!-- 表格 -->
     <el-table @row-click="clickRow" ref="table" highlight-current-row
               border v-loading="loading" :data="heritageList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" align="center" type="index" :index="indexMethod" />
-      <el-table-column label="非遗项目ID" align="center" prop="heritageId" />
-      <el-table-column label="项目名称" align="center" prop="title" />
-      <el-table-column label="项目简介" align="center" prop="description" />
-      <el-table-column label="详细介绍" align="center" prop="detailDescription" />
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="序号" align="center" type="index" :index="indexMethod"/>
+      <el-table-column label="非遗项目ID" align="center" prop="heritageId"/>
+      <el-table-column label="项目名称" align="center" prop="title"/>
+      <el-table-column label="项目简介" align="center" prop="description"/>
+      <el-table-column label="详细介绍" align="center" prop="detailDescription" show-overflow-tooltip/>
       <el-table-column label="图片" align="center" prop="image" width="100">
         <template #default="scope">
           <image-preview :src="scope.row.image" :width="50" :height="50"/>
         </template>
       </el-table-column>
-      <el-table-column label="所在地" align="center" prop="location" />
-      <el-table-column label="类别" align="center" prop="category" />
-      <el-table-column label="传承状态" align="center" prop="status" />
+      <el-table-column label="所在地" align="center" prop="location"/>
+      <el-table-column label="类别" align="center" prop="category"/>
+
+      <el-table-column label="传承状态" align="center" prop="status">
+        <template #default="scope">
+          <el-tag v-if="scope.row.status === '良好'" type="success">{{scope.row.status}}</el-tag>
+          <el-tag v-if="scope.row.status === '一般'" type="warning">{{scope.row.status}}</el-tag>
+          <el-tag v-if="scope.row.status === '濒危'" type="danger">{{scope.row.status}}</el-tag>
+
+        </template>
+
+
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
@@ -98,11 +125,11 @@
 
     <!-- 分页组件 -->
     <pagination
-      v-show="total>0"
-      :total="total"
-      v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
+        v-show="total>0"
+        :total="total"
+        v-model:page="queryParams.pageNum"
+        v-model:limit="queryParams.pageSize"
+        @pagination="getList"
     />
 
     <!-- 导入对话框 -->
@@ -120,13 +147,17 @@
           :auto-upload="false"
           drag
       >
-        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+        <el-icon class="el-icon--upload">
+          <upload-filled/>
+        </el-icon>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <template #tip>
-            <div class="el-upload__tip text-center">
-              <span>仅允许导入xls、xlsx格式文件。</span>
-              <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;" @click="importTemplate">下载模板</el-link>
-            </div>
+          <div class="el-upload__tip text-center">
+            <span>仅允许导入xls、xlsx格式文件。</span>
+            <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;"
+                     @click="importTemplate">下载模板
+            </el-link>
+          </div>
         </template>
       </el-upload>
       <div slot="footer" class="dialog-footer">
@@ -136,29 +167,57 @@
     </vxe-modal>
 
     <!-- 添加或修改非遗项目对话框 -->
-    <vxe-modal :title="title" v-model="open" width="500px" show-maximize showFooter resize>
+    <!-- 添加或修改非遗项目对话框 -->
+    <vxe-modal :title="title" v-model="open" width="50%" show-maximize showFooter resize>
       <el-form ref="heritageRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="项目名称" prop="title">
-          <el-input v-model="form.title" placeholder="请输入项目名称" />
-        </el-form-item>
-        <el-form-item label="项目简介" prop="description">
-          <el-input v-model="form.description" placeholder="请输入项目简介" />
-        </el-form-item>
-        <el-form-item label="详细介绍">
-          <editor v-model="form.detailDescription" :min-height="192"/>
-        </el-form-item>
-        <el-form-item label="图片" prop="image">
-          <image-upload v-model="form.image"/>
-        </el-form-item>
-        <el-form-item label="所在地" prop="location">
-          <el-input v-model="form.location" placeholder="请输入所在地" />
-        </el-form-item>
-        <el-form-item label="类别" prop="category">
-          <el-input v-model="form.category" placeholder="请输入类别" />
-        </el-form-item>
-        <el-form-item label="传承状态" prop="status">
-          <el-input v-model="form.status" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
+        <el-card>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="项目名称" prop="title">
+                <el-input v-model="form.title" placeholder="请输入项目名称"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="项目简介" prop="description">
+                <el-input v-model="form.description" placeholder="请输入项目简介"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="传承状态" prop="status">
+                <el-select v-model="form.status" placeholder="请选择传承状态">
+                   <el-option
+                      v-for="item in statuOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="类别" prop="category">
+                <el-input v-model="form.category" placeholder="请输入类别"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="所在地" prop="location">
+                <el-input type="textarea" :rows="6" v-model="form.location" placeholder="请输入所在地"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="图片" prop="image">
+                <image-upload v-model="form.image"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item label="详细介绍">
+            <editor v-model="form.detailDescription" :min-height="192"/>
+          </el-form-item>
+        </el-card>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -167,15 +226,17 @@
         </div>
       </template>
     </vxe-modal>
+
   </div>
 </template>
 
 <script setup name="Heritage">
-import { listHeritage, getHeritage, delHeritage, addHeritage, updateHeritage } from "@/api/ich/heritage"
+import {listHeritage, getHeritage, delHeritage, addHeritage, updateHeritage} from "@/api/ich/heritage"
 import {getToken} from "@/utils/auth.js";
+
 const baseURL = import.meta.env.VITE_APP_BASE_API
 
-const { proxy } = getCurrentInstance()
+const {proxy} = getCurrentInstance()
 
 const heritageList = ref([])
 const open = ref(false)
@@ -199,25 +260,25 @@ const data = reactive({
   },
   rules: {
     title: [
-      { required: true, message: "项目名称不能为空", trigger: "blur" }
+      {required: true, message: "项目名称不能为空", trigger: "blur"}
     ],
     description: [
-      { required: true, message: "项目简介不能为空", trigger: "blur" }
+      {required: true, message: "项目简介不能为空", trigger: "blur"}
     ],
     detailDescription: [
-      { required: true, message: "详细介绍不能为空", trigger: "blur" }
+      {required: true, message: "详细介绍不能为空", trigger: "blur"}
     ],
     image: [
-      { required: true, message: "图片不能为空", trigger: "blur" }
+      {required: true, message: "图片不能为空", trigger: "blur"}
     ],
     location: [
-      { required: true, message: "所在地不能为空", trigger: "blur" }
+      {required: true, message: "所在地不能为空", trigger: "blur"}
     ],
     category: [
-      { required: true, message: "类别不能为空", trigger: "blur" }
+      {required: true, message: "类别不能为空", trigger: "blur"}
     ],
     status: [
-      { required: true, message: "传承状态不能为空", trigger: "blur" }
+      {required: true, message: "传承状态不能为空", trigger: "blur"}
     ],
   },
   // 导入参数
@@ -229,13 +290,28 @@ const data = reactive({
     // 是否禁用上传
     isUploading: false,
     // 设置上传的请求头部
-    headers: { Authorization: "Bearer " + getToken() },
+    headers: {Authorization: "Bearer " + getToken()},
     // 上传的地址
     url: baseURL + "/ich/heritage/importData"
   }
 })
 
-const { queryParams, form, rules, upload } = toRefs(data)
+const {queryParams, form, rules, upload} = toRefs(data)
+//传承状态选择项
+const statuOptions = [
+    {
+  value: '良好',
+  label: '良好',
+  },
+  {
+    value: '一般',
+    label: '一般',
+  },
+  {
+    value: '濒危',
+    label: '濒危',
+  },
+]
 
 //点击行 获取行
 const clickRow = (row) => {
@@ -250,9 +326,9 @@ const clickRow = (row) => {
 /** 自定义序号 */
 const indexMethod = (index) => {
   let pageNum = queryParams.value.pageNum - 1;
-  if((pageNum!==-1 && pageNum!==0)){
-    return (index + 1) + (pageNum  * queryParams.value.pageSize);
-  }else{
+  if ((pageNum !== -1 && pageNum !== 0)) {
+    return (index + 1) + (pageNum * queryParams.value.pageSize);
+  } else {
     return (index + 1)
   }
 }
@@ -350,12 +426,13 @@ const submitForm = () => {
 /** 删除按钮操作 */
 const handleDelete = (row) => {
   const _heritageIds = row.heritageId || ids.value
-  proxy.$modal.confirm('是否确认删除该项数据？').then(function() {
+  proxy.$modal.confirm('是否确认删除该项数据？').then(function () {
     return delHeritage(_heritageIds)
   }).then(() => {
     getList()
     proxy.$modal.msgSuccess("删除成功")
-  }).catch(() => {})
+  }).catch(() => {
+  })
 }
 
 /** 导出按钮操作 */
@@ -367,8 +444,7 @@ const handleExport = () => {
 
 /** 下载模板操作 */
 const importTemplate = () => {
-  proxy.download('ich/heritage/importTemplate', {
-  }, `template_${new Date().getTime()}.xlsx`)
+  proxy.download('ich/heritage/importTemplate', {}, `template_${new Date().getTime()}.xlsx`)
 }
 
 /** 导入按钮操作 */
@@ -387,7 +463,7 @@ const handleFileSuccess = (response, file, fileList) => {
   upload.value.open = false;
   upload.value.isUploading = false;
   proxy.$refs.uploadRef.clearFiles();
-  proxy.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true });
+  proxy.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", {dangerouslyUseHTMLString: true});
   getList();
 }
 
