@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fast.ich.mapper.NewsMapper">
+
+    <resultMap type="News" id="NewsResult">
+        <result property="newsId"    column="news_id"    />
+        <result property="title"    column="title"    />
+        <result property="summary"    column="summary"    />
+        <result property="content"    column="content"    />
+        <result property="image"    column="image"    />
+        <result property="author"    column="author"    />
+        <result property="category"    column="category"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <select id="selectNewsList" parameterType="News" resultMap="NewsResult">
+        select news_id, title, summary, content, image, author, category, create_time from news
+        <where>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="author != null  and author != ''"> and author = #{author}</if>
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+        </where>
+    </select>
+
+    <select id="selectNewsByNewsId" parameterType="String" resultMap="NewsResult">
+select news_id, title, summary, content, image, author, category, create_time from news
+        where news_id = #{newsId}
+    </select>
+
+    <insert id="insertNews" parameterType="News">
+        insert into news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="newsId != null">news_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="summary != null and summary != ''">summary,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="image != null and image != ''">image,</if>
+            <if test="author != null and author != ''">author,</if>
+            <if test="category != null and category != ''">category,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="newsId != null">#{newsId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="summary != null and summary != ''">#{summary},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="image != null and image != ''">#{image},</if>
+            <if test="author != null and author != ''">#{author},</if>
+            <if test="category != null and category != ''">#{category},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNews" parameterType="News">
+        update news
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="summary != null and summary != ''">summary = #{summary},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="image != null and image != ''">image = #{image},</if>
+            <if test="author != null and author != ''">author = #{author},</if>
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where news_id = #{newsId}
+    </update>
+
+    <delete id="deleteNewsByNewsId" parameterType="String">
+        delete from news where news_id = #{newsId}
+    </delete>
+
+    <delete id="deleteNewsByNewsIds" parameterType="String">
+        delete from news where news_id in
+        <foreach item="newsId" collection="array" open="(" separator="," close=")">
+            #{newsId}
+        </foreach>
+    </delete>
+</mapper>

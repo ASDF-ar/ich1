@@ -29,7 +29,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 select heritage_id, title, description, detail_description, image, location, category, status, create_time from heritage
         where heritage_id = #{heritageId}
     </select>
-
+<!---->
+    <!--提取唯一分类字段并返回给前端-->
+    <select id="selectOnlyCategories" resultType="java.lang.String">
+        select distinct category
+        from heritage
+        order by category
+    </select>
     <insert id="insertHeritage" parameterType="Heritage">
         insert into heritage
         <trim prefix="(" suffix=")" suffixOverrides=",">
