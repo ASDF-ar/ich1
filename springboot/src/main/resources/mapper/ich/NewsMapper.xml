@@ -19,9 +19,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select news_id, title, summary, content, image, author, category, create_time from news
         <where>
             <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
-            <if test="author != null  and author != ''"> and author = #{author}</if>
+            <if test="author != null  and author != ''"> and author like concat('%', #{author}, '%')</if>
             <if test="category != null  and category != ''"> and category = #{category}</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectNewsByNewsId" parameterType="String" resultMap="NewsResult">
