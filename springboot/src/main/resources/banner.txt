@@ -1,0 +1,8 @@
+Application Version: ${fast.version}
+Spring Boot Version: ${spring-boot.version}
+.__                                 .__
+|  |__  __ _______      ____ _____  |__|
+|  |  \|  |  \__  \   _/ ___\\__  \ |  |
+|   Y  \  |  // __ \_ \  \___ / __ \|  |
+|___|  /____/(____  /  \___  >____  /__|
+     \/           \/       \/     \/

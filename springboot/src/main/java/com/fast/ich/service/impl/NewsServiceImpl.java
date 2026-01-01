@@ -11,6 +11,7 @@ import com.fast.ich.service.INewsService;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -136,4 +137,53 @@ public class NewsServiceImpl implements INewsService
     {
         return newsMapper.deleteNewsByNewsId(newsId);
     }
+
+
+
+
+
+    /**
+     * 设置为焦点新闻
+     * @param newsId
+     * @return
+     */
+    @Override
+    @Transactional
+    public int setAsFocusNews(String newsId) {
+        //查询新闻资讯表中是否已存在焦点新闻
+        Boolean isFocus = newsMapper.selectIsFocus();
+        //如果之前已经存在焦点新闻则将之前的焦点新闻改为非焦点, 如果不存在, 直接跳过
+        if (isFocus) {
+            //查询新闻资讯表中此前的焦点新闻的新闻ID
+            String oldFocusNewsId = newsMapper.selectOldFocusNewsToId();
+            //将之前的焦点新闻改为非焦点
+            News news = new News();
+            news.setNewsId(oldFocusNewsId);
+            news.setIsFocus(false);
+            newsMapper.updateNews(news);
+        }
+        //创建一个新闻资讯对象
+        News news = new News();
+        news.setNewsId(newsId);
+        news.setIsFocus(true);
+        return newsMapper.updateNews(news);
+    }
+
+    /**
+     * 查询焦点新闻信息
+     * @return
+     */
+    @Override
+    public News selectFocusNews() {
+        return newsMapper.selectFocusNews();
+    }
+    /**
+     * 查询非焦点新闻列表, 并根据发布时间倒序排序
+     * @return
+     */
+    @Override
+    public List<News> selectNonFocusNewsList() {
+        return newsMapper.selectNonFocusNewsList();
+    }
+
 }

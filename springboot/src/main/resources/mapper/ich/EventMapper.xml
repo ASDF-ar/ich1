@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fast.ich.mapper.EventMapper">
+
+    <resultMap type="Event" id="EventResult">
+        <result property="eventId"    column="event_id"    />
+        <result property="title"    column="title"    />
+        <result property="date"    column="date"    />
+        <result property="time"    column="time"    />
+        <result property="location"    column="location"    />
+        <result property="organizer"    column="organizer"    />
+        <result property="contact"    column="contact"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+
+
+    <select id="selectEventList" parameterType="Event" resultMap="EventResult">
+        select event_id, title, date, time, location, organizer, contact, content from event
+        <where>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="organizer != null  and organizer != ''"> and organizer like concat('%', #{organizer}, '%')</if>
+        </where>
+        order by date desc
+    </select>
+
+    <select id="selectEventByEventId" parameterType="String" resultMap="EventResult">
+select event_id, title, date, time, location, organizer, contact, content from event
+        where event_id = #{eventId}
+    </select>
+
+    <!--查询所有大于当前日期的活动预告列表, 并根据日期正序排序-->
+    <select id="selectGreaterThanTheCurrentDateEventList" resultType="com.fast.ich.domain.vo.EventVO">
+        select event_id as eventId, title, date, location,
+            month(date) as month,
+            day(date) as day
+        from event
+        where date > curdate()
+        order by date
+    </select>
+
+
+    <insert id="insertEvent" parameterType="Event">
+        insert into event
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eventId != null">event_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="date != null">date,</if>
+            <if test="time != null and time != ''">time,</if>
+            <if test="location != null and location != ''">location,</if>
+            <if test="organizer != null and organizer != ''">organizer,</if>
+            <if test="contact != null and contact != ''">contact,</if>
+            <if test="content != null and content != ''">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eventId != null">#{eventId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="date != null">#{date},</if>
+            <if test="time != null and time != ''">#{time},</if>
+            <if test="location != null and location != ''">#{location},</if>
+            <if test="organizer != null and organizer != ''">#{organizer},</if>
+            <if test="contact != null and contact != ''">#{contact},</if>
+            <if test="content != null and content != ''">#{content},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEvent" parameterType="Event">
+        update event
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="time != null and time != ''">time = #{time},</if>
+            <if test="location != null and location != ''">location = #{location},</if>
+            <if test="organizer != null and organizer != ''">organizer = #{organizer},</if>
+            <if test="contact != null and contact != ''">contact = #{contact},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+        </trim>
+        where event_id = #{eventId}
+    </update>
+
+    <delete id="deleteEventByEventId" parameterType="String">
+        delete from event where event_id = #{eventId}
+    </delete>
+
+    <delete id="deleteEventByEventIds" parameterType="String">
+        delete from event where event_id in
+        <foreach item="eventId" collection="array" open="(" separator="," close=")">
+            #{eventId}
+        </foreach>
+    </delete>
+</mapper>

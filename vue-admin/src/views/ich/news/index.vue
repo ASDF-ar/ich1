@@ -106,12 +106,19 @@
         </template>
       </el-table-column>
       <el-table-column label="发布时间" align="center" prop="createTime"/>
-
+      <el-table-column label="是否焦点" align="center" prop="isFocus">
+        <template #default="scope">
+          <el-tag type="success" v-if="scope.row.isFocus === true">是</el-tag>
+          <el-tag type="info" v-else>否</el-tag>
+        </template>
+      </el-table-column>
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button v-if="scope.row.isFocus === false" link type="success"
+                     icon="SuccessFilled" @click="focusNews(scope.row)">
+            设置为焦点新闻
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -158,6 +165,9 @@
         <el-button @click="upload.open = false">取 消</el-button>
       </div>
     </vxe-modal>
+
+<!--    import {listNews, getNews, delNews, addNews, updateNews, setAsFocusNews} from "@/api/ich/news"-->
+<!--    import {ElMessage, ElMessageBox} from "element-plus";-->
 
     <!-- 添加或修改新闻资讯对话框 -->
     <vxe-modal :title="title" v-model="open" width="50%" show-maximize showFooter resize>
@@ -222,8 +232,9 @@
 </template>
 
 <script setup name="News">
-import {listNews, getNews, delNews, addNews, updateNews} from "@/api/ich/news"
+import {listNews, getNews, delNews, addNews, updateNews, setAsFocusNews} from "@/api/ich/news"
 import {getToken} from "@/utils/auth.js";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const baseURL = import.meta.env.VITE_APP_BASE_API
 
@@ -287,6 +298,27 @@ const data = reactive({
 
 const {queryParams, form, rules, upload} = toRefs(data)
 
+
+
+//设置为焦点新闻
+const focusNews = (row) => {
+  ElMessageBox.confirm(
+      '确定要将该新闻设置为焦点新闻吗?',
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  )
+      .then(() => {
+        setAsFocusNews(row.newsId).then(res => {
+          //刷新列表数据
+          getList()
+          ElMessage({type: 'success', message: '设置成功!',})
+        })
+      })
+}
 //点击行 获取行
 const clickRow = (row) => {
   selectedRow.value = row; // 更新选中的行

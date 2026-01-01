@@ -45,5 +45,8 @@ public class News extends BaseEntity
     @Excel(name = "类型")
     private String category;
 
+    /** 是否焦点 */
+    private Boolean isFocus;
+
 
 }

@@ -60,4 +60,25 @@ public interface NewsMapper
      * @return 结果
      */
     public int deleteNewsByNewsIds(String[] newsIds);
+
+    /**
+     * 查询新闻资讯表中是否已存在焦点新闻
+     * @return
+     */
+    Boolean selectIsFocus();
+
+
+    /**
+     * 查询新闻资讯表中此前的焦点新闻的新闻ID
+     * @return
+     */
+    String selectOldFocusNewsToId();
+
+    /**
+     * 查询焦点新闻信息
+     * @return
+     */
+    News selectFocusNews();
+
+    List<News> selectNonFocusNewsList();
 }

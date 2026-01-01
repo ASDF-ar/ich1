@@ -13,10 +13,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="author"    column="author"    />
         <result property="category"    column="category"    />
         <result property="createTime"    column="create_time"    />
+        <result property="isFocus"    column="is_focus"    />
     </resultMap>
 
     <select id="selectNewsList" parameterType="News" resultMap="NewsResult">
-        select news_id, title, summary, content, image, author, category, create_time from news
+        select news_id, title, summary, content, image, author, category, create_time, is_focus from news
         <where>
             <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
             <if test="author != null  and author != ''"> and author like concat('%', #{author}, '%')</if>
@@ -26,10 +27,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectNewsByNewsId" parameterType="String" resultMap="NewsResult">
-select news_id, title, summary, content, image, author, category, create_time from news
+        select news_id, title, summary, content, image, author, category, create_time, is_focus from news
         where news_id = #{newsId}
     </select>
+    <!--查询新闻资讯表中此前的焦点新闻的新闻ID-->
+    <select id="selectOldFocusNewsToId" resultType="java.lang.String">
+        select news_id
+        from news
+        where is_focus = true
+    </select>
+    <!--查询新闻资讯表中是否已存在焦点新闻-->
+    <select id="selectIsFocus" resultType="java.lang.Boolean">
+        select count(news_id)
+        from news
+        where is_focus = true
+    </select>
+    <!--查询焦点新闻信息-->
+    <select id="selectFocusNews" resultMap="NewsResult">
+        select news_id, title, summary, content, image, author, category, create_time, is_focus
+        from news
+        where is_focus = true
+    </select>
 
+    <!--查询非焦点新闻列表, 并根据发布时间倒序排序-->
+    <select id="selectNonFocusNewsList" parameterType="News" resultMap="NewsResult">
+        select news_id, title, summary, content, image, author, category, create_time, is_focus
+        from news
+        where is_focus = false
+        order by create_time desc
+    </select>
     <insert id="insertNews" parameterType="News">
         insert into news
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -41,6 +67,7 @@ select news_id, title, summary, content, image, author, category, create_time fr
             <if test="author != null and author != ''">author,</if>
             <if test="category != null and category != ''">category,</if>
             <if test="createTime != null">create_time,</if>
+
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="newsId != null">#{newsId},</if>
@@ -53,7 +80,6 @@ select news_id, title, summary, content, image, author, category, create_time fr
             <if test="createTime != null">#{createTime},</if>
          </trim>
     </insert>
-
     <update id="updateNews" parameterType="News">
         update news
         <trim prefix="SET" suffixOverrides=",">
@@ -64,6 +90,7 @@ select news_id, title, summary, content, image, author, category, create_time fr
             <if test="author != null and author != ''">author = #{author},</if>
             <if test="category != null and category != ''">category = #{category},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isFocus != null">is_focus = #{isFocus},</if>
         </trim>
         where news_id = #{newsId}
     </update>

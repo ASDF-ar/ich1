@@ -3,6 +3,7 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/../../huacai (1)/newsMenu.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/../../huacai/heritageMenu.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/../../活动预告管理/eventMenu.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/(视频口误, 脚手架sql是9张表)fast.sql" dialect="MySQL" />
   </component>
 </project>

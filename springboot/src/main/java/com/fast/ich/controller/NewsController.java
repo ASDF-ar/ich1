@@ -23,6 +23,8 @@ import com.fast.ich.service.INewsService;
 import com.fast.system.general.utils.poi.ExcelUtil;
 import com.fast.system.general.core.page.TableDataInfo;
 
+import static com.fast.system.general.core.domain.AjaxResult.success;
+
 /**
  * 新闻资讯Controller
  *
@@ -108,4 +110,27 @@ public class NewsController extends BaseController {
     public AjaxResult remove(@PathVariable String[] newsIds) {
         return toAjax(newsService.deleteNewsByNewsIds(newsIds));
     }
+
+    /**
+     * 设置为焦点新闻
+     */
+    @PutMapping("/setAsFocusNews/{newsId}")
+    public AjaxResult setAsFocusNews(@PathVariable String newsId) {
+        return toAjax(newsService.setAsFocusNews(newsId));
+    }
+    /**
+     * 查询焦点新闻信息
+     */
+    @GetMapping("/selectFocusNews")
+    public AjaxResult selectFocusNews() {
+        return success(newsService.selectFocusNews());
+    }
+    /**
+     * 查询非焦点新闻列表, 并根据发布时间倒序排序
+     */
+    @GetMapping("/selectNonFocusNewsList")
+    public AjaxResult selectNonFocusNewsList() {
+        return success(newsService.selectNonFocusNewsList());
+    }
 }
+

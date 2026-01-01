@@ -42,3 +42,12 @@ export function delNews(newsId) {
     method: 'delete'
   })
 }
+
+
+// 设置为焦点新闻
+export function setAsFocusNews(newsId) {
+  return request({
+    url: '/ich/news/setAsFocusNews/' + newsId,
+    method: 'put'
+  })
+}

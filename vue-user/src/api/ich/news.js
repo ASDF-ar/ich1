@@ -42,3 +42,20 @@ export function delNews(newsId) {
     method: 'delete'
   })
 }
+
+
+// 查询焦点新闻信息
+export function selectFocusNews() {
+  return request({
+    url: '/ich/news/selectFocusNews',
+    method: 'get'
+  })
+}
+
+// 查询非焦点新闻列表, 并根据发布时间倒序排序
+export function selectNonFocusNewsList() {
+  return request({
+    url: '/ich/news/selectNonFocusNewsList',
+    method: 'get'
+  })
+}

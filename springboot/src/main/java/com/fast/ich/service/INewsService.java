@@ -66,4 +66,23 @@ public interface INewsService
      * @return 结果
      */
     public int deleteNewsByNewsId(String newsId);
+
+    /**
+     * 设置为焦点新闻
+     * @param newsId
+     * @return
+     */
+    int setAsFocusNews(String newsId);
+
+    /**
+     * 查询焦点新闻信息
+     * @return
+     */
+    News selectFocusNews();
+
+    /**
+     * 查询非焦点新闻列表, 并根据发布时间倒序排序
+     * @return
+     */
+    List<News> selectNonFocusNewsList();
 }
