@@ -72,6 +72,11 @@ export const constantRoutes = [
             component: () => import('@/views/HomePage/newsDetail'),
             hidden: true,
           },
+          {
+            path: 'eventDetail/:id',
+            component: () => import('@/views/HomePage/eventDetail'),
+            hidden: true,
+          },
         ],
         hidden: true
       }

@@ -48,5 +48,4 @@ export function selectGreaterThanTheCurrentDateEventList() {
     url: '/ich/event/selectGreaterThanTheCurrentDateEventList',
     method: 'get'
   })
-
 }
