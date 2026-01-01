@@ -16,7 +16,7 @@ body {
   display: flex;
   height: 70px;
   line-height: 70px;
-  background-color: #3a7bd5;
+  background-color: #8B4513; /* 咖啡色 */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 /* 导航菜单样式调整 */
@@ -100,7 +100,7 @@ body {
 }
 .el-dropdown-menu__item:hover {
   background-color: #f5f7fa !important;
-  color: #3a7bd5 !important;
+  color: #8B4513 !important; /* 咖啡色 */
   transform: translateX(3px);
 }
 .main-content {
@@ -114,7 +114,7 @@ body {
 }
 .el-menu-item.is-active {
   color: #fff !important;
-  background-color: rgba(255, 255, 255, 0.2) !important;
+  background-color: rgba(139, 69, 19, 0.3) !important; /* 咖啡色半透明 */
   border-bottom: 3px solid #fff !important; /* 底部边框替代背景色 */
 }
 .el-menu-item {
@@ -129,7 +129,7 @@ body {
 }
 .el-menu-item:not(.is-active):hover {
   color: #fff !important;
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(139, 69, 19, 0.2) !important; /* 咖啡色半透明 */
   transform: translateY(-2px); /* 悬停上浮效果 */
 }
 /* 按钮样式优化 */

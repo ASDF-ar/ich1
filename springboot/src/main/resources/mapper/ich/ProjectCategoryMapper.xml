@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fast.ich.mapper.ProjectCategoryMapper">
+
+    <resultMap type="ProjectCategory" id="ProjectCategoryResult">
+        <result property="pcId"    column="pc_id"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <select id="selectProjectCategoryList" parameterType="ProjectCategory" resultMap="ProjectCategoryResult">
+        select pc_id, name from project_category
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectProjectCategoryByPcId" parameterType="String" resultMap="ProjectCategoryResult">
+select pc_id, name from project_category
+        where pc_id = #{pcId}
+    </select>
+
+    <insert id="insertProjectCategory" parameterType="ProjectCategory">
+        insert into project_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pcId != null">pc_id,</if>
+            <if test="name != null and name != ''">name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pcId != null">#{pcId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectCategory" parameterType="ProjectCategory">
+        update project_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+        </trim>
+        where pc_id = #{pcId}
+    </update>
+
+    <delete id="deleteProjectCategoryByPcId" parameterType="String">
+        delete from project_category where pc_id = #{pcId}
+    </delete>
+
+    <delete id="deleteProjectCategoryByPcIds" parameterType="String">
+        delete from project_category where pc_id in
+        <foreach item="pcId" collection="array" open="(" separator="," close=")">
+            #{pcId}
+        </foreach>
+    </delete>
+</mapper>

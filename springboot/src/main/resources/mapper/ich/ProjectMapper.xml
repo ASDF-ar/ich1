@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fast.ich.mapper.ProjectMapper">
+
+    <resultMap type="Project" id="ProjectResult">
+        <result property="projectId"    column="project_id"    />
+        <result property="name"    column="name"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="introduction"    column="introduction"    />
+        <result property="description"    column="description"    />
+        <result property="inheritance"    column="inheritance"    />
+        <result property="inheritors"    column="inheritors"    />
+        <result property="contact"    column="contact"    />
+        <result property="userId"    column="user_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="userName"    column="user_name"    />
+
+    </resultMap>
+
+    <select id="selectProjectList" parameterType="Project" resultMap="ProjectResult">
+        select p.project_id, p.name, p.category_id, p.introduction, p.description,
+        p.inheritance, p.inheritors, p.contact, p.user_id, p.create_time,
+        u.user_name
+        from project p
+        left join sys_user u on p.user_id = u.user_id
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="categoryId != null  and categoryId != ''"> and p.category_id = #{categoryId}</if>
+            <if test="userId != null "> and user_id = #{p.userId}</if>
+            <if test="userName != null  and userName != ''"> and u.user_name like concat('%', #{userName}, '%')</if>
+
+        </where>
+    </select>
+
+    <select id="selectProjectByProjectId" parameterType="String" resultMap="ProjectResult">
+select project_id, name, category_id, introduction, description, inheritance, inheritors, contact, user_id, create_time from project
+        where project_id = #{projectId}
+    </select>
+
+    <insert id="insertProject" parameterType="Project">
+        insert into project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">project_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="categoryId != null and categoryId != ''">category_id,</if>
+            <if test="introduction != null and introduction != ''">introduction,</if>
+            <if test="description != null and description != ''">description,</if>
+            <if test="inheritance != null and inheritance != ''">inheritance,</if>
+            <if test="inheritors != null and inheritors != ''">inheritors,</if>
+            <if test="contact != null and contact != ''">contact,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">#{projectId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="categoryId != null and categoryId != ''">#{categoryId},</if>
+            <if test="introduction != null and introduction != ''">#{introduction},</if>
+            <if test="description != null and description != ''">#{description},</if>
+            <if test="inheritance != null and inheritance != ''">#{inheritance},</if>
+            <if test="inheritors != null and inheritors != ''">#{inheritors},</if>
+            <if test="contact != null and contact != ''">#{contact},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProject" parameterType="Project">
+        update project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="categoryId != null and categoryId != ''">category_id = #{categoryId},</if>
+            <if test="introduction != null and introduction != ''">introduction = #{introduction},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="inheritance != null and inheritance != ''">inheritance = #{inheritance},</if>
+            <if test="inheritors != null and inheritors != ''">inheritors = #{inheritors},</if>
+            <if test="contact != null and contact != ''">contact = #{contact},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where project_id = #{projectId}
+    </update>
+
+    <delete id="deleteProjectByProjectId" parameterType="String">
+        delete from project where project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteProjectByProjectIds" parameterType="String">
+        delete from project where project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+</mapper>

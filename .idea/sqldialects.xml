@@ -4,6 +4,8 @@
     <file url="file://$PROJECT_DIR$/../../huacai (1)/newsMenu.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/../../huacai/heritageMenu.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/../../活动预告管理/eventMenu.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/../../项目申报管理/projectMenu.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/../../项目申报类别管理/categoryMenu.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/(视频口误, 脚手架sql是9张表)fast.sql" dialect="MySQL" />
   </component>
 </project>
