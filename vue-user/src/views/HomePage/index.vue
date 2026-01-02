@@ -40,6 +40,12 @@
                 </el-icon>
                 传承人
               </el-menu-item>
+              <el-menu-item index="/index/about">
+                <el-icon>
+                  <InfoFilled/>
+                </el-icon>
+                关于我们
+              </el-menu-item>
               <el-menu-item index="/index/profile">
                 <el-icon>
                   <UserFilled/>
@@ -90,8 +96,7 @@ import {useRoute, useRouter} from 'vue-router'
 import {getUser} from "@/api/system/user"
 import useUserStore from "@/store/modules/user.js";
 import {ElMessageBox} from "element-plus";
-import {Collection, Document, FolderAdd, HomeFilled, UserFilled} from "@element-plus/icons-vue";
-
+import {Collection, Document, FolderAdd, HomeFilled, InfoFilled, User, UserFilled} from "@element-plus/icons-vue";
 const userStore = useUserStore()
 const route = useRoute()
 const router = useRouter()

@@ -6,7 +6,7 @@
         <div v-for="master in masterList"
              :key="master.masterId"
              class="master-card"
-             @click=""
+             @click="goToMasterDetail(master.masterId)"
         >
           <!-- 传承人照片 -->
           <div class="master-image">
@@ -46,6 +46,7 @@
 import {ref, onMounted} from 'vue'
 import {listMaster} from "@/api/ich/master.js";
 import {Location} from "@element-plus/icons-vue";
+import {useRouter} from "vue-router";
 
 //基础URL地址
 const baseUrl = import.meta.env.VITE_APP_BASE_API
@@ -62,6 +63,14 @@ const masterList = ref([])
 //数据总数
 const total = ref(0)
 
+//路由实例
+const router = useRouter()
+
+//跳转到传承人详情页面
+const goToMasterDetail = (masterId) => {
+  router.push('/index/masterDetail/' + masterId)
+
+}
 //查询数据
 const getList = () => {
   listMaster(query.value).then(res => {

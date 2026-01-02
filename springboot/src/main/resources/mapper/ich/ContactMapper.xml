@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fast.ich.mapper.ContactMapper">
+
+    <resultMap type="Contact" id="ContactResult">
+        <result property="contactId"    column="contact_id"    />
+        <result property="name"    column="name"    />
+        <result property="email"    column="email"    />
+        <result property="message"    column="message"    />
+        <result property="userId"    column="user_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="userName"    column="user_name"    />
+
+    </resultMap>
+
+
+    <select id="selectContactList" parameterType="Contact" resultMap="ContactResult">
+        select c.contact_id, c.name, c.email, c.message, c.user_id, c.create_time,
+        u.user_name
+        from contact c
+        left join sys_user u on c.user_id = u.user_id
+        <where>
+            <if test="name != null  and name != ''">
+                and c.name like concat('%', #{name}, '%')
+            </if>
+            <if test="userId != null "> and c.user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''">
+                and u.user_name like concat('%', #{userName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectContactByContactId" parameterType="String" resultMap="ContactResult">
+select contact_id, name, email, message, user_id, create_time from contact
+        where contact_id = #{contactId}
+    </select>
+
+    <insert id="insertContact" parameterType="Contact">
+        insert into contact
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contactId != null">contact_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="email != null and email != ''">email,</if>
+            <if test="message != null and message != ''">message,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contactId != null">#{contactId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="email != null and email != ''">#{email},</if>
+            <if test="message != null and message != ''">#{message},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateContact" parameterType="Contact">
+        update contact
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="message != null and message != ''">message = #{message},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where contact_id = #{contactId}
+    </update>
+
+    <delete id="deleteContactByContactId" parameterType="String">
+        delete from contact where contact_id = #{contactId}
+    </delete>
+
+    <delete id="deleteContactByContactIds" parameterType="String">
+        delete from contact where contact_id in
+        <foreach item="contactId" collection="array" open="(" separator="," close=")">
+            #{contactId}
+        </foreach>
+    </delete>
+</mapper>

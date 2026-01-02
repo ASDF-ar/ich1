@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fast.ich.mapper.AboutMapper">
+
+    <resultMap type="About" id="AboutResult">
+        <result property="aboutId"    column="about_id"    />
+        <result property="intro"    column="intro"    />
+        <result property="image"    column="image"    />
+        <result property="mission"    column="mission"    />
+        <result property="vision"    column="vision"    />
+        <result property="value"    column="value"    />
+        <result property="phone"    column="phone"    />
+        <result property="address"    column="address"    />
+        <result property="email"    column="email"    />
+    </resultMap>
+
+    <select id="selectAboutList" parameterType="About" resultMap="AboutResult">
+        select about_id, intro, image, mission, vision, value, phone, address, email from about
+        <where>
+        </where>
+    </select>
+
+    <select id="selectAboutByAboutId" parameterType="String" resultMap="AboutResult">
+select about_id, intro, image, mission, vision, value, phone, address, email from about
+        where about_id = #{aboutId}
+    </select>
+
+    <insert id="insertAbout" parameterType="About">
+        insert into about
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="aboutId != null">about_id,</if>
+            <if test="intro != null">intro,</if>
+            <if test="image != null">image,</if>
+            <if test="mission != null">mission,</if>
+            <if test="vision != null">vision,</if>
+            <if test="value != null">value,</if>
+            <if test="phone != null">phone,</if>
+            <if test="address != null">address,</if>
+            <if test="email != null">email,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="aboutId != null">#{aboutId},</if>
+            <if test="intro != null">#{intro},</if>
+            <if test="image != null">#{image},</if>
+            <if test="mission != null">#{mission},</if>
+            <if test="vision != null">#{vision},</if>
+            <if test="value != null">#{value},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="address != null">#{address},</if>
+            <if test="email != null">#{email},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAbout" parameterType="About">
+        update about
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="intro != null">intro = #{intro},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="mission != null">mission = #{mission},</if>
+            <if test="vision != null">vision = #{vision},</if>
+            <if test="value != null">value = #{value},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="email != null">email = #{email},</if>
+        </trim>
+        where about_id = #{aboutId}
+    </update>
+
+    <delete id="deleteAboutByAboutId" parameterType="String">
+        delete from about where about_id = #{aboutId}
+    </delete>
+
+    <delete id="deleteAboutByAboutIds" parameterType="String">
+        delete from about where about_id in
+        <foreach item="aboutId" collection="array" open="(" separator="," close=")">
+            #{aboutId}
+        </foreach>
+    </delete>
+</mapper>
