@@ -108,4 +108,12 @@ public class ProjectCategoryController extends BaseController {
     public AjaxResult remove(@PathVariable String[] pcIds) {
         return toAjax(projectCategoryService.deleteProjectCategoryByPcIds(pcIds));
     }
+
+    /**
+     * 查询所有项目申报类别
+     */
+    @GetMapping("/selectAllCategoryList")
+    public AjaxResult selectAllCategoryList() {
+        return success(projectCategoryService.selectProjectCategoryList(new ProjectCategory()));
+    }
 }

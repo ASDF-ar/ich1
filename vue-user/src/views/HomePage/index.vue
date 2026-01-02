@@ -28,6 +28,12 @@
                 </el-icon>
                 新闻资讯
               </el-menu-item>
+              <el-menu-item index="/index/projects">
+                <el-icon>
+                  <FolderAdd/>
+                </el-icon>
+                项目申报
+              </el-menu-item>
               <el-menu-item index="/index/profile">
                 <el-icon>
                   <UserFilled/>
@@ -78,7 +84,7 @@ import {useRoute, useRouter} from 'vue-router'
 import {getUser} from "@/api/system/user"
 import useUserStore from "@/store/modules/user.js";
 import {ElMessageBox} from "element-plus";
-import {Collection, Document, HomeFilled, UserFilled} from "@element-plus/icons-vue";
+import {Collection, Document, FolderAdd, HomeFilled, UserFilled} from "@element-plus/icons-vue";
 
 const userStore = useUserStore()
 const route = useRoute()

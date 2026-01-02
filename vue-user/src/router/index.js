@@ -77,6 +77,11 @@ export const constantRoutes = [
             component: () => import('@/views/HomePage/eventDetail'),
             hidden: true,
           },
+          {
+            path: 'projects',
+            component: () => import('@/views/HomePage/projects'),
+            hidden: true,
+          },
         ],
         hidden: true
       }

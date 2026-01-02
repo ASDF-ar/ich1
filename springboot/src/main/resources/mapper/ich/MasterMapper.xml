@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fast.ich.mapper.MasterMapper">
+
+    <resultMap type="Master" id="MasterResult">
+        <result property="masterId"    column="master_id"    />
+        <result property="name"    column="name"    />
+        <result property="skills"    column="skills"    />
+        <result property="location"    column="location"    />
+        <result property="image"    column="image"    />
+    </resultMap>
+
+    <resultMap id="MasterMasterContributionResult" type="Master" extends="MasterResult">
+        <collection property="masterContributionList" ofType="MasterContribution" column="master_id" select="selectMasterContributionList" />
+    </resultMap>
+
+    <resultMap type="MasterContribution" id="MasterContributionResult">
+        <result property="contributionId"    column="contribution_id"    />
+        <result property="masterId"    column="master_id"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+
+    <select id="selectMasterList" parameterType="Master" resultMap="MasterResult">
+        select master_id, name, skills, location, image from master
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectMasterByMasterId" parameterType="String" resultMap="MasterMasterContributionResult">
+        select master_id, name, skills, location, image
+        from master
+        where master_id = #{masterId}
+    </select>
+
+    <select id="selectMasterContributionList" resultMap="MasterContributionResult">
+        select contribution_id, master_id, content
+        from master_contribution
+        where master_id = #{master_id}
+    </select>
+
+    <insert id="insertMaster" parameterType="Master">
+        insert into master
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="masterId != null">master_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="skills != null and skills != ''">skills,</if>
+            <if test="location != null and location != ''">location,</if>
+            <if test="image != null and image != ''">image,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="masterId != null">#{masterId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="skills != null and skills != ''">#{skills},</if>
+            <if test="location != null and location != ''">#{location},</if>
+            <if test="image != null and image != ''">#{image},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMaster" parameterType="Master">
+        update master
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="skills != null and skills != ''">skills = #{skills},</if>
+            <if test="location != null and location != ''">location = #{location},</if>
+            <if test="image != null and image != ''">image = #{image},</if>
+        </trim>
+        where master_id = #{masterId}
+    </update>
+
+    <delete id="deleteMasterByMasterId" parameterType="String">
+        delete from master where master_id = #{masterId}
+    </delete>
+
+    <delete id="deleteMasterByMasterIds" parameterType="String">
+        delete from master where master_id in
+        <foreach item="masterId" collection="array" open="(" separator="," close=")">
+            #{masterId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteMasterContributionByMasterIds" parameterType="String">
+        delete from master_contribution where master_id in
+        <foreach item="masterId" collection="array" open="(" separator="," close=")">
+            #{masterId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteMasterContributionByMasterId" parameterType="String">
+        delete from master_contribution where master_id = #{masterId}
+    </delete>
+
+    <insert id="batchMasterContribution">
+        insert into master_contribution( contribution_id, master_id, content) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.contributionId}, #{item.masterId}, #{item.content})
+        </foreach>
+    </insert>
+</mapper>

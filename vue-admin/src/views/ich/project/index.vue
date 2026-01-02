@@ -10,14 +10,17 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="项目申报类别ID" prop="categoryId">
-        <el-input
-          v-model="queryParams.categoryId"
-          placeholder="请输入项目申报类别ID"
-          clearable
-          @keyup.enter="handleQuery"
-        />
+      <el-form-item label="项目申报类别" prop="categoryId">
+        <el-select style="width: 200px;" v-model="queryParams.categoryId" placeholder="请选择项目申报类别">
+          <el-option
+              v-for="item in categoryList"
+              :key="item.pcId"
+              :label="item.name"
+              :value="item.pcId"
+          />
+        </el-select>
       </el-form-item>
+
       <el-form-item label="申报人用户名" prop="userName">
         <el-input
           v-model="queryParams.userName"
@@ -26,6 +29,7 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -34,23 +38,23 @@
 
     <!-- 顶部按钮 -->
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="Plus"
-          @click="handleAdd"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="Edit"
-          :disabled="single"
-          @click="handleUpdate"
-        >修改</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          plain-->
+<!--          icon="Plus"-->
+<!--          @click="handleAdd"-->
+<!--        >新增</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="Edit"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -78,7 +82,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" align="center" type="index" :index="indexMethod" />
       <el-table-column label="项目名称" align="center" prop="name" />
-      <el-table-column label="项目申报类别ID" align="center" prop="categoryId" />
+      <el-table-column label="项目申报类别名称" align="center" prop="categoryName"/>
       <el-table-column label="项目简介" align="center" prop="introduction" />
       <el-table-column label="详细描述" align="center" prop="description" />
       <el-table-column label="传承谱系" align="center" prop="inheritance" />
@@ -111,7 +115,14 @@
           <el-input v-model="form.name" placeholder="请输入项目名称" />
         </el-form-item>
         <el-form-item label="项目申报类别ID" prop="categoryId">
-          <el-input v-model="form.categoryId" placeholder="请输入项目申报类别ID" />
+          <el-select v-model="form.categoryId" placeholder="请选择项目申报类别">
+            <el-option
+                v-for="item in categoryList"
+                :key="item.pcId"
+                :label="item.name"
+                :value="item.pcId"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="项目简介" prop="introduction">
           <el-input v-model="form.introduction" type="textarea" placeholder="请输入内容" />
@@ -143,6 +154,7 @@
 <script setup name="Project">
 import { listProject, getProject, delProject, addProject, updateProject } from "@/api/ich/project"
 import {getToken} from "@/utils/auth.js";
+import {selectAllCategoryList} from "@/api/ich/category.js";
 const baseURL = import.meta.env.VITE_APP_BASE_API
 
 const { proxy } = getCurrentInstance()
@@ -327,6 +339,14 @@ const handleExport = () => {
   }, `project_${new Date().getTime()}.xlsx`)
 }
 
+const categoryList = ref([])
+
+onMounted(() => {
+  selectAllCategoryList().then(res => {
+    categoryList.value = res.data
+    console.log(categoryList.value, '看看数据')
+  })
+})
 
 getList()
 </script>

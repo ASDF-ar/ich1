@@ -42,3 +42,10 @@ export function delCategory(pcId) {
     method: 'delete'
   })
 }
+// 查询所有项目申报类别
+export function selectAllCategoryList() {
+  return request({
+    url: '/ich/category/selectAllCategoryList',
+    method: 'get'
+  })
+}

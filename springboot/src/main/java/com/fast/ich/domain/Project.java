@@ -56,5 +56,7 @@ public class Project extends BaseEntity
     // 申报人用户名
     private String userName;
 
+    //项目申报类别名称
+    private String categoryName;
 
 }

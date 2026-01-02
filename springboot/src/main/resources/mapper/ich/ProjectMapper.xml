@@ -16,21 +16,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="userId"    column="user_id"    />
         <result property="createTime"    column="create_time"    />
         <result property="userName"    column="user_name"    />
-
+        <result property="categoryName"    column="categoryName"    />
     </resultMap>
 
+
     <select id="selectProjectList" parameterType="Project" resultMap="ProjectResult">
-        select p.project_id, p.name, p.category_id, p.introduction, p.description,
-        p.inheritance, p.inheritors, p.contact, p.user_id, p.create_time,
-        u.user_name
+        select p.project_id, p.name, p.category_id, p.introduction, p.description, p.inheritance,
+        p.inheritors, p.contact, p.user_id, p.create_time,
+        u.user_name,
+        pc.name as categoryName
         from project p
         left join sys_user u on p.user_id = u.user_id
+        left join project_category pc on p.category_id = pc.pc_id
         <where>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="name != null  and name != ''"> and p.name like concat('%', #{name}, '%')</if>
             <if test="categoryId != null  and categoryId != ''"> and p.category_id = #{categoryId}</if>
-            <if test="userId != null "> and user_id = #{p.userId}</if>
+            <if test="userId != null "> and p.user_id = #{userId}</if>
             <if test="userName != null  and userName != ''"> and u.user_name like concat('%', #{userName}, '%')</if>
-
         </where>
     </select>
 
