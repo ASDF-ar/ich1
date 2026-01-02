@@ -1,6 +1,8 @@
 package com.fast.ich.mapper;
 
 import java.util.List;
+
+import com.fast.ich.domain.vo.PieVO;
 import org.apache.ibatis.annotations.Mapper;
 import com.fast.ich.domain.Heritage;
 
@@ -69,4 +71,12 @@ public interface HeritageMapper
      * @return
      */
     List<String> selectOnlyCategories();
+
+//     selectCategoryChart();
+
+    /**
+     * 查询每种项目分类各有多少个
+     * @return
+     */
+    List<PieVO> selectCategoryChart();
 }

@@ -1,6 +1,8 @@
 package com.fast.ich.service.impl;
 
 import java.util.List;
+
+import com.fast.ich.domain.vo.PieVO;
 import com.fast.system.general.utils.DateUtils;
 import com.fast.system.general.utils.uuid.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,6 +146,16 @@ public class HeritageServiceImpl implements IHeritageService
      */
     @Override
     public List<String> selectOnlyCategories() {
+
         return heritageMapper.selectOnlyCategories();
+    }
+
+    /**
+     * 查询每种项目分类各有多少个
+     * @return
+     */
+    @Override
+    public List<PieVO> selectCategoryChart() {
+        return heritageMapper.selectCategoryChart();
     }
 }

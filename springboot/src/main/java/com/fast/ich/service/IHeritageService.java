@@ -2,6 +2,7 @@ package com.fast.ich.service;
 
 import java.util.List;
 import com.fast.ich.domain.Heritage;
+import com.fast.ich.domain.vo.PieVO;
 
 /**
  * 非遗项目Service接口
@@ -71,4 +72,10 @@ public interface IHeritageService
      * @return
      */
     List<String> selectOnlyCategories();
+
+    /**
+     * 查询每种项目分类各有多少个
+     * @return
+     */
+    List<PieVO> selectCategoryChart();
 }

@@ -43,6 +43,5 @@ public class Contact extends BaseEntity
     private String userName;
 
 
-//    public void setCreateTime(Date nowDate) {
-//    }
+
 }

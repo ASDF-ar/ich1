@@ -78,6 +78,7 @@
       <el-table-column label="邮箱" align="center" prop="email"/>
       <el-table-column label="留言内容" align="center" prop="message"/>
       <el-table-column label="留言人用户名" align="center" prop="userName"/>
+      <el-table-column label="留言时间" align="center" prop="createTime"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>

@@ -83,6 +83,30 @@
           <!-- 留言反馈 -->
           <div class="contact-form">
             <h3>留言反馈</h3>
+            <el-form :model="form" label-position="top">
+              <el-form-item label="姓名" prop="name">
+                <el-input v-model="form.name"
+                          placeholder="请输入姓名"/>
+              </el-form-item>
+
+              <el-form-item label="邮箱" prop="email">
+                <el-input v-model="form.email"
+                          placeholder="请输入邮箱"/>
+              </el-form-item>
+
+              <el-form-item label="留言内容" prop="message">
+                <el-input v-model="form.message"
+                          type="textarea"
+                          placeholder="请输入您的留言内容"/>
+              </el-form-item>
+
+              <!-- 提交按钮 -->
+              <el-form-item>
+                <el-button type="primary" @click="submitContact">
+                  提交留言
+                </el-button>
+              </el-form-item>
+            </el-form>
           </div>
 
         </div>
@@ -95,6 +119,8 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import {selectCurrentAbout} from "@/api/ich/about.js";
+import {ElMessage} from "element-plus";
+import {addContact} from "@/api/ich/contact.js";
 
 const baseUrl = import.meta.env.VITE_APP_BASE_API
 
@@ -105,6 +131,33 @@ onMounted(() => {
   selectCurrentAbout().then(res => {
     about.value = res.data
   })
+})
+
+//提交留言反馈
+const submitContact = () => {
+  //表单验证
+  if (!form.value.name || !form.value.email || !form.value.message) {
+    ElMessage.warning('请填写完整信息')
+    return
+  }
+
+  //调用API提交表单
+  addContact(form.value).then(res => {
+    ElMessage.success('留言提交成功,我们会尽快回复您!')
+    //重置表单
+    form.value = {
+      name: '',
+      email: '',
+      message: ''
+    }
+  })
+}
+
+//表单参数
+const form = ref({
+  name: '',
+  email: '',
+  message: ''
 })
 
 </script>

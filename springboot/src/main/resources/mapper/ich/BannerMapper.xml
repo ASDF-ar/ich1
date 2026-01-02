@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fast.ich.mapper.BannerMapper">
+
+    <resultMap type="Banner" id="BannerResult">
+        <result property="bannerId"    column="banner_id"    />
+        <result property="title"    column="title"    />
+        <result property="description"    column="description"    />
+        <result property="image"    column="image"    />
+        <result property="sort"    column="sort"    />
+    </resultMap>
+
+    <select id="selectBannerList" parameterType="Banner" resultMap="BannerResult">
+        select banner_id, title, description, image, sort from banner
+        <where>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+        </where>
+        order by sort
+    </select>
+
+    <select id="selectBannerByBannerId" parameterType="String" resultMap="BannerResult">
+select banner_id, title, description, image, sort from banner
+        where banner_id = #{bannerId}
+    </select>
+
+    <insert id="insertBanner" parameterType="Banner">
+        insert into banner
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bannerId != null">banner_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="description != null and description != ''">description,</if>
+            <if test="image != null and image != ''">image,</if>
+            <if test="sort != null">sort,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bannerId != null">#{bannerId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="description != null and description != ''">#{description},</if>
+            <if test="image != null and image != ''">#{image},</if>
+            <if test="sort != null">#{sort},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBanner" parameterType="Banner">
+        update banner
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="image != null and image != ''">image = #{image},</if>
+            <if test="sort != null">sort = #{sort},</if>
+        </trim>
+        where banner_id = #{bannerId}
+    </update>
+
+    <delete id="deleteBannerByBannerId" parameterType="String">
+        delete from banner where banner_id = #{bannerId}
+    </delete>
+
+    <delete id="deleteBannerByBannerIds" parameterType="String">
+        delete from banner where banner_id in
+        <foreach item="bannerId" collection="array" open="(" separator="," close=")">
+            #{bannerId}
+        </foreach>
+    </delete>
+</mapper>
