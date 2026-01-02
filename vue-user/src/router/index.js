@@ -82,6 +82,11 @@ export const constantRoutes = [
             component: () => import('@/views/HomePage/projects'),
             hidden: true,
           },
+          {
+            path: 'master',
+            component: () => import('@/views/HomePage/master'),
+            hidden: true,
+          },
         ],
         hidden: true
       }

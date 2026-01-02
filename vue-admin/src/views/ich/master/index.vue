@@ -65,20 +65,26 @@
               border v-loading="loading" :data="masterList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="序号" align="center" type="index" :index="indexMethod"/>
-      <el-table-column label="姓名" align="center" prop="name"/>
-      <el-table-column label="技艺专长" align="center" prop="skills"/>
-      <el-table-column label="位置" align="center" prop="location"/>
-      <el-table-column label="照片" align="center" prop="image" width="100">
+      <el-table-column label="姓名" align="center" prop="name">
         <template #default="scope">
-          <image-preview :src="scope.row.image" :width="50" :height="50"/>
-        </template>
+          <el-link type="primary" @click="goToMasterDetail(scope.row.masterId)">
+            {{scope.row.name}}
+        </el-link>
+       </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
+      <el-table-column label="技艺专长"  align="center" prop="skills"/>
+          <el-table-column label="位置" align="center" prop="location"/>
+          <el-table-column label="照片" align="center" prop="image" width="100">
+            <template #default="scope">
+              <image-preview :src="scope.row.image" :width="50" :height="50"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+            <template #default="scope">
+              <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
+              <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
     </el-table>
 
     <!-- 分页组件 -->
@@ -89,7 +95,6 @@
         v-model:limit="queryParams.pageSize"
         @pagination="getList"
     />
-
 
 
     <!-- 添加或修改传承人对话框 -->
@@ -148,12 +153,15 @@
         </div>
       </template>
     </vxe-modal>
+    <!-- 详情人组件-->
+    <MasterDetail ref="masterDetail"/>
   </div>
 </template>
 
 <script setup name="Master">
 import {listMaster, getMaster, delMaster, addMaster, updateMaster} from "@/api/ich/master"
 import {getToken} from "@/utils/auth.js";
+import MasterDetail from "@/views/ich/master/MasterDetail.vue";
 
 const baseURL = import.meta.env.VITE_APP_BASE_API
 
@@ -197,6 +205,16 @@ const data = reactive({
 })
 
 const {queryParams, form, rules} = toRefs(data)
+
+
+//传承人详情组件实例
+const masterDetail = ref(null)
+
+//打开传承人详情组件
+const goToMasterDetail = (masterId) => {
+  masterDetail.value.handleOpen(masterId)
+}
+
 
 //点击行 获取行
 const clickRow = (row) => {

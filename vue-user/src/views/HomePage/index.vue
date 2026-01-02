@@ -34,6 +34,12 @@
                 </el-icon>
                 项目申报
               </el-menu-item>
+              <el-menu-item index="/index/master">
+                <el-icon>
+                  <User/>
+                </el-icon>
+                传承人
+              </el-menu-item>
               <el-menu-item index="/index/profile">
                 <el-icon>
                   <UserFilled/>
